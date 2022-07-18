@@ -1,0 +1,25 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "C/C++: clang compila il file attivo",
+            "command": "clang",
+            "args": [
+                "-DLLVM_DISABLE_ABI_BREAKING_CHECKS_ENFORCING",
+                "-fsanitize=dataflow",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}",
+                "${file}"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$clang"
+            ],
+            "group": "build",
+            "detail": "compilatore: /usr/bin/clang"
+        }
+    ],
+    "version": "2.0.0"
+}
