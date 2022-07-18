@@ -39,34 +39,92 @@ char * generaPass (const char *nome, const char *cognome, int giorno, int mese, 
     return pass;
 }
 
+int checkWord(char *stringa){
+    while(*stringa){
+        if (!isspace(*stringa))
+            return 0;
+        stringa++;
+    }
+    return 1;
+}
+
+int checkData(int giorno, int mese, int anno){
+    if (anno<=0 || mese<=0 || giorno<=0)
+        return 0;
+    if (anno<1920)
+        return 0;
+    if (mese>12)
+        return 0;
+    switch (mese)
+    {
+    case 1:
+    case 3:
+    case 5:
+    case 7:
+    case 8:
+    case 10:
+    case 12:
+        if (giorno>31)
+            return 0;
+        break;
+    case 4:
+    case 6:
+    case 9:
+    case 11:
+         if (giorno>30)
+            return 0;
+    default:
+        break;
+    }
+    if (!(anno%400) || (!(anno%4) && anno%100)){ //è bisestile
+        if (mese==2 && giorno>29)
+            return 0;
+    }
+    else{
+        if (mese==2 && giorno>28)
+            return 0;
+    }
+    return 1;
+}
+
 int main(void) {
     char *nome= (char*) malloc(64);
     char cognome[64];
     char birthday[11];
-    int giorno;
-    int mese;
-    int anno;
+    int giorno=0;
+    int mese=0;
+    int anno=0;
     char* res;
     do{
         printf("Inserisci il nome: \n");
         res= fgets(nome, 64, stdin);
         if (res==NULL)
             iferror(0, "gets");
-    }while(strcmp(nome, " ")==0);
-    printf("Inserisci il cognome: \n");
-    res= fgets(cognome, 64, stdin);
-    if (res==NULL)
-        iferror(0, "gets");
-    printf("Inserisci il giorno di nascita dd/mm/aaaa: \n");
-    res= fgets(birthday, 11, stdin);
-    if (res==NULL)
-        iferror(0, "gets");
-    char* token= strtok(birthday, "/-");
-    giorno=atoi(token);
-    token = strtok(NULL, "/-");
-    mese=atoi(token);
-    token = strtok(NULL, "/-");
-    anno=atoi(token);
+    }while(checkWord(nome));
+
+    do{
+        printf("Inserisci il cognome: \n");
+        res= fgets(cognome, 64, stdin);
+        if (res==NULL)
+            iferror(0, "gets");
+    }while(checkWord(cognome));
+
+    do{
+        giorno=mese=anno=0;
+        printf("Inserisci il giorno di nascita dd/mm/aaaa: \n");
+        res= fgets(birthday, 11, stdin);
+        if (res==NULL)
+            iferror(0, "gets");
+        char* token= strtok(birthday, "/-");
+        if (token!=NULL)
+            giorno=atoi(token);
+        token = strtok(NULL, "/-");
+        if (token!=NULL)
+            mese=atoi(token);
+        token = strtok(NULL, "/-");
+        if (token!=NULL)
+            anno=atoi(token);
+    }while(!checkData(giorno, mese, anno));
     
     char * risultato= generaPass(nome, cognome, giorno, mese, anno);
 
