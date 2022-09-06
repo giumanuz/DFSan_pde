@@ -19,7 +19,7 @@ int main(void) {
 
   dfsan_label label[]= {1, 2, 4};
 
-  for (int i=0; i<sizeof(vet)/4; i++)
+  for (int i=0; i<3; i++)
     dfsan_set_label(label[i], &vet[i], sizeof(int));
   
   dfsan_label ij_label = dfsan_get_label(vet[0]+ vet[1]);

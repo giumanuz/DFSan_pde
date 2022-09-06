@@ -56,10 +56,9 @@ void dfsan_mem_origin_transfer(const void *dst, const void *src, uptr len);
 // Copy shadow bytes from src to dst.
 // Note this preserves distinct taint labels at specific offsets.
 void dfsan_mem_shadow_transfer(void *dst, const void *src, uptr len);
-}  // extern "C"
+} // extern "C"
 
-template <typename T>
-void dfsan_set_label(dfsan_label label, T &data) {
+template <typename T> void dfsan_set_label(dfsan_label label, T &data) {
   dfsan_set_label(label, (void *)&data, sizeof(T));
 }
 
@@ -107,6 +106,6 @@ int dfsan_posix_memalign(void **memptr, uptr alignment, uptr size);
 
 void dfsan_init();
 
-}  // namespace __dfsan
+} // namespace __dfsan
 
-#endif  // DFSAN_H
+#endif // DFSAN_H
