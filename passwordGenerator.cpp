@@ -26,11 +26,11 @@ char * generaPass(const char *nome, const char *cognome, int giorno, int mese,
   pass[3] = rand() % (122 + 1 - 97) + 97;
   pass[5] = rand() % (96 + 1 - 91) + 91;
   pass[4] = '-';
-  if (nome[1] > 100 && nome[1] < 120) {
+  if (nome[1] > 100 && nome[1] < 120)
     pass[0] = 'G';
-  } else {
+  else
     pass[0] = 'H';
-  }
+  
   pass[1] = (anno % giorno) % 10 + '0';
   pass[2] = (anno) % 10 + '0';
   pass[6] = cognome[0];
@@ -167,8 +167,8 @@ int main(void) {
   dfsan_label label_mese = 8;
   dfsan_label label_anno = 16;
 
-  dfsan_set_label(label_nome, &nome, strlen(nome));
-  dfsan_set_label(label_cognome, &cognome, strlen(cognome));
+  dfsan_set_label(label_nome, nome, strlen(nome));
+  dfsan_set_label(label_cognome, cognome, strlen(cognome));
   dfsan_set_label(label_giorno, &giorno, sizeof(giorno));
   dfsan_set_label(label_mese, &mese, sizeof(mese));
   dfsan_set_label(label_anno, &anno, sizeof(anno));
