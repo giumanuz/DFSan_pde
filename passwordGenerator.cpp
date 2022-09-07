@@ -176,8 +176,7 @@ int main(void) {
   char *risultato = generaPass(nome, cognome, giorno, mese, anno);
 
 
-  dfsan_label labelPassw[] = {0b00100000, 0b01000000, 0b01100000, 0b10000000,
-                               0b10100000, 0b11000000, 0b11100000};
+  dfsan_label labelPassw[7];
 
   for (int i = 0; i < 7; i++)
     labelPassw[i]=dfsan_get_label(risultato[i]);
