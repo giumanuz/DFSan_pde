@@ -91,9 +91,10 @@ int main(void) {
   dfsan_label ld = dfsan_get_label(d);
 
   int e = 4;
-  dfsan_label le = 8;
+  dfsan_label le = dfsan_get_label(e);
 
   printf("PRIMA\n");
+  printf("a=%d %d, b=%d %d, c=%d %d, d=%d %d, e=%d %d\n", a, la, b, lb, c, lc, d, ld, e, le);
   printTaint(la, lb, lc, ld, le);
 
   pid_t pid = fork();
@@ -102,12 +103,15 @@ int main(void) {
     e = c - b;
     d += b;
     printf("\nDENTRO\n");
+    printf("a=%d %d, b=%d %d, c=%d %d, d=%d %d, e=%d %d\n", a, la, b, lb, c, lc, d, ld, e, le);
     printTaint(la, lb, lc, ld, le);
     _exit(EXIT_SUCCESS);
   }
 
-  printf("\nDOPO\n");
+  
   le = dfsan_get_label(e);
+  printf("\nDOPO\n");
+  printf("a=%d %d, b=%d %d, c=%d %d, d=%d %d, e=%d %d\n", a, la, b, lb, c, lc, d, ld, e, le);
   printTaint(la, lb, lc, ld, le);
 
   int status;
