@@ -28,45 +28,45 @@ void printTaint(dfsan_label la, dfsan_label lb, dfsan_label lc, dfsan_label ld,
 
   for (int i = 0; i < 5; i++) {
     for (int j = 0; j < 5; j++) {
-      if (i!=j && dfsan_has_label(arr[i], arr[j])){
+      if (i != j && dfsan_has_label(arr[i], arr[j])) {
         char primo, secondo;
-        switch (i){
+        switch (i) {
         case 0:
-            primo='a';
-            break;
+          primo = 'a';
+          break;
         case 1:
-            primo='b';
-            break;
+          primo = 'b';
+          break;
         case 2:
-            primo='c';
-            break;
+          primo = 'c';
+          break;
         case 3:
-            primo='d';
-            break;
+          primo = 'd';
+          break;
         case 4:
-            primo='e';
-            break;
+          primo = 'e';
+          break;
         default:
-            break;
+          break;
         }
-        switch (j){
+        switch (j) {
         case 0:
-            secondo='a';
-            break;
+          secondo = 'a';
+          break;
         case 1:
-            secondo='b';
-            break;
+          secondo = 'b';
+          break;
         case 2:
-            secondo='c';
-            break;
+          secondo = 'c';
+          break;
         case 3:
-            secondo='d';
-            break;
+          secondo = 'd';
+          break;
         case 4:
-            secondo='e';
-            break;
+          secondo = 'e';
+          break;
         default:
-            break;
+          break;
         }
         printf("Il label %c è influenzato dal label %c\n", primo, secondo);
       }
@@ -109,8 +109,6 @@ int main(void) {
   printf("\nDOPO\n");
   le = dfsan_get_label(e);
   printTaint(la, lb, lc, ld, le);
-
-
 
   int status;
   pid = wait(&status);
