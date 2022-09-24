@@ -14,7 +14,7 @@ using namespace std;
 // clang -DLLVM_DISABLE_ABI_BREAKING_CHECKS_ENFORCING -fsanitize=dataflow -o
 // prova1 prova1.cpp
 
-void iferror(int r, char msg[]) {
+void iferror(int r, const char* msg) {
   if (r != -1)
     return;
   perror(msg);
@@ -26,9 +26,9 @@ void printTaint(dfsan_label la, dfsan_label lb, dfsan_label lc, dfsan_label ld,
 
   dfsan_label arr[] = {la, lb, lc, ld, le};
 
-  for (int i = 0; i < 5; i++) {
-    for (int j = 0; j < 5; j++) {
-      if (i != j && dfsan_has_label(arr[i], arr[j])) {
+  for (int i = 3; i < 5; i++) {
+    for (int j = 0; j < 3; j++) {
+      if (i != j && dfsan_has_label(arr[i], arr[j]) && arr[j]!=0) {
         char primo, secondo;
         switch (i) {
         case 0:
@@ -91,7 +91,7 @@ int main(void) {
   dfsan_label ld = dfsan_get_label(d);
 
   int e = 4;
-  dfsan_label le = dfsan_get_label(e);
+  dfsan_label le=0;
 
   printf("PRIMA\n");
   printf("a=%d %d, b=%d %d, c=%d %d, d=%d %d, e=%d %d\n", a, la, b, lb, c, lc, d, ld, e, le);
@@ -100,25 +100,28 @@ int main(void) {
   pid_t pid = fork();
   iferror(pid, "fork");
   if (pid == 0) {
-    e = c - b;
     d += b;
+    e = c - b;
+    dfsan_label ld2= dfsan_get_label(d);
+    dfsan_label le2=dfsan_get_label(e);
     printf("\nDENTRO\n");
-    printf("a=%d %d, b=%d %d, c=%d %d, d=%d %d, e=%d %d\n", a, la, b, lb, c, lc, d, ld, e, le);
-    printTaint(la, lb, lc, ld, le);
+    printf("a=%d %d, b=%d %d, c=%d %d, d=%d %d, e=%d %d\n", a, la, b, lb, c, lc, d, ld2, e, le2);
+    printTaint(la, lb, lc, ld2, le2);
     _exit(EXIT_SUCCESS);
   }
-
-  
-  le = dfsan_get_label(e);
-  printf("\nDOPO\n");
-  printf("a=%d %d, b=%d %d, c=%d %d, d=%d %d, e=%d %d\n", a, la, b, lb, c, lc, d, ld, e, le);
-  printTaint(la, lb, lc, ld, le);
 
   int status;
   pid = wait(&status);
   iferror(pid, "wait");
-  if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
+  if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
     printf("Corretto\n");
   else
     printf("Non corretto");
+
+
+  dfsan_label ld3 = dfsan_get_label(d);
+  dfsan_label le3 = dfsan_get_label(e);
+  printf("\nDOPO\n");
+  printf("a=%d %d, b=%d %d, c=%d %d, d=%d %d, e=%d %d\n", a, la, b, lb, c, lc, d, ld3, e, le3);
+  printTaint(la, lb, lc, ld3, le3);
 }
